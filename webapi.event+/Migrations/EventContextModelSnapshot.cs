@@ -91,7 +91,7 @@ namespace webapi.event_.Migrations
                     b.Property<string>("CNPJ")
                         .IsRequired()
                         .HasMaxLength(14)
-                        .HasColumnType("CHAR(14");
+                        .HasColumnType("CHAR(14)");
 
                     b.Property<string>("Endereco")
                         .IsRequired()
@@ -170,7 +170,8 @@ namespace webapi.event_.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .HasColumnType("Email do Usuário é obrigatório");
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<Guid>("IdTipoUsuario")
                         .HasColumnType("uniqueidentifier");
@@ -187,8 +188,7 @@ namespace webapi.event_.Migrations
                     b.HasKey("IdUsuario");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("IdTipoUsuario");
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace webapi.event_.Migrations
 {
     /// <inheritdoc />
-    public partial class BD_v1 : Migration
+    public partial class DB_v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace webapi.event_.Migrations
                 columns: table => new
                 {
                     IdInstituicao = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CNPJ = table.Column<string>(type: "CHAR(14", maxLength: 14, nullable: false),
+                    CNPJ = table.Column<string>(type: "CHAR(14)", maxLength: 14, nullable: false),
                     Endereco = table.Column<string>(type: "VARCHAR(200)", nullable: false),
                     NomeFantasia = table.Column<string>(type: "VARCHAR(100)", nullable: false)
                 },
@@ -83,7 +83,7 @@ namespace webapi.event_.Migrations
                 {
                     IdUsuario = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nome = table.Column<string>(type: "VARCHAR(100)", nullable: false),
-                    Email = table.Column<string>(type: "Email do Usuário é obrigatório", nullable: true),
+                    Email = table.Column<string>(type: "VARCHAR(100)", nullable: false),
                     Senha = table.Column<string>(type: "CHAR(60)", maxLength: 60, nullable: false),
                     IdTipoUsuario = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -191,8 +191,7 @@ namespace webapi.event_.Migrations
                 name: "IX_Usuario_Email",
                 table: "Usuario",
                 column: "Email",
-                unique: true,
-                filter: "[Email] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuario_IdTipoUsuario",

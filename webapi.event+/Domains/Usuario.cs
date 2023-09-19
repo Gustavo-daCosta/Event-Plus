@@ -15,7 +15,8 @@ namespace webapi.event_.Domains
         [Required(ErrorMessage = "Nome do Usuário é obrigatório!")]
         public string? Nome { get; set; }
 
-        [Column(TypeName = "Email do Usuário é obrigatório")]
+        [Column(TypeName = "VARCHAR(100)")]
+        [Required(ErrorMessage = "Email do Usuário é obrigatório")]
         [EmailAddress]
         public string? Email { get; set; }
 

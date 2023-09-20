@@ -46,14 +46,19 @@ namespace webapi.event_.Repositories
 
         public void Deletar(Guid id)
         {
+            throw new NotImplementedException();
+        }
+
+        /*public void Deletar(Guid id)
+        {
             try
             {
-                TipoUsuario tipoUsuarioBuscado = _eventContext
+                TipoUsuario tipoUsuarioBuscado = _eventContext.TipoUsuario;
                 _eventContext.TipoUsuario.Remove();
             }
             catch (Exception)
             { throw; }
-        }
+        }*/
 
         public List<TipoUsuario> Listar()
         {

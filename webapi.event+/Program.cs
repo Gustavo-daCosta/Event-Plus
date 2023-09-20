@@ -36,8 +36,8 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "InLock Games API",
-        Description = "An ASP.NET Core Web API for games management - API, Sprint 2",
+        Title = "Event+ - Events management Web API",
+        Description = "An ASP.NET Core Web API for events management",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
         {

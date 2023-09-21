@@ -21,7 +21,6 @@ namespace webapi.event_.Controllers
             try
             {
                 _usuarioRepository.Cadastrar(usuario);
-
                 return StatusCode(201);
             }
             catch (Exception error)
@@ -37,7 +36,6 @@ namespace webapi.event_.Controllers
             try
             {
                 Usuario usuarioBuscado = _usuarioRepository.BuscarPorId(id);
-
                 return StatusCode(200, usuarioBuscado);
             }
             catch (Exception error)
@@ -53,7 +51,6 @@ namespace webapi.event_.Controllers
             try
             {
                 Usuario usuarioBuscado = _usuarioRepository.BuscarPorEmailESenha(usuario.Email!, usuario.Senha!);
-
                 return StatusCode(200, usuarioBuscado);
             }
             catch (Exception error)

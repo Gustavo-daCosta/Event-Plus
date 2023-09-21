@@ -9,10 +9,10 @@ namespace webapi.event_.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    public class TipoUsuarioController : ControllerBase
+    public class PresencaEventoController : ControllerBase
     {
-        private ITipoUsuarioRepository _tipoUsuarioRepository { get; set; }
-        public TipoUsuarioController() => _tipoUsuarioRepository = new TipoUsuarioRepository();
+        private IPresencaEventoRepository _presencaEventoRepository { get; set; }
+        public PresencaEventoController() => _presencaEventoRepository = new PresencaEventoRepository();
 
         [HttpGet]
         [Route("ListarTodos")]
@@ -20,8 +20,8 @@ namespace webapi.event_.Controllers
         {
             try
             {
-                List<TipoUsuario> listaTiposUsuario = _tipoUsuarioRepository.Listar();
-                return Ok(listaTiposUsuario);
+                List<PresencaEvento> listaPresencasEvento = _presencaEventoRepository.Listar();
+                return Ok(listaPresencasEvento);
             }
             catch (Exception error)
             {
@@ -31,11 +31,11 @@ namespace webapi.event_.Controllers
 
         [HttpPost]
         [Route("Cadastrar")]
-        public IActionResult Post(TipoUsuario tipoUsuario)
+        public IActionResult Post(PresencaEvento presencaEvento)
         {
             try
             {
-                _tipoUsuarioRepository.Cadastrar(tipoUsuario);
+                _presencaEventoRepository.Cadastrar(presencaEvento);
                 return StatusCode(201);
             }
             catch (Exception error)
@@ -50,7 +50,7 @@ namespace webapi.event_.Controllers
         {
             try
             {
-                _tipoUsuarioRepository.Deletar(id);
+                _presencaEventoRepository.Deletar(id);
                 return Ok();
             }
             catch (Exception error)
@@ -61,11 +61,11 @@ namespace webapi.event_.Controllers
 
         [HttpPut]
         [Route("Atualizar")]
-        public IActionResult Put(Guid id, TipoUsuario tipoUsuario)
+        public IActionResult Put(Guid id, PresencaEvento presencaEvento)
         {
             try
             {
-                _tipoUsuarioRepository.Atualizar(id, tipoUsuario);
+                _presencaEventoRepository.Atualizar(id, presencaEvento);
                 return Ok();
             }
             catch (Exception error)

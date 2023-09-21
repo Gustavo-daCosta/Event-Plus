@@ -9,10 +9,10 @@ namespace webapi.event_.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    public class TipoUsuarioController : ControllerBase
+    public class TipoEventoController : ControllerBase
     {
-        private ITipoUsuarioRepository _tipoUsuarioRepository { get; set; }
-        public TipoUsuarioController() => _tipoUsuarioRepository = new TipoUsuarioRepository();
+        private ITipoEventoRepository _tipoEventoRepository { get; set; }
+        public TipoEventoController() => _tipoEventoRepository = new TipoEventoRepository();
 
         [HttpGet]
         [Route("ListarTodos")]
@@ -20,8 +20,8 @@ namespace webapi.event_.Controllers
         {
             try
             {
-                List<TipoUsuario> listaTiposUsuario = _tipoUsuarioRepository.Listar();
-                return Ok(listaTiposUsuario);
+                List<TipoEvento> listaTiposEvento = _tipoEventoRepository.Listar();
+                return Ok(listaTiposEvento);
             }
             catch (Exception error)
             {
@@ -31,12 +31,27 @@ namespace webapi.event_.Controllers
 
         [HttpPost]
         [Route("Cadastrar")]
-        public IActionResult Post(TipoUsuario tipoUsuario)
+        public IActionResult Post(TipoEvento tipoEvento)
         {
             try
             {
-                _tipoUsuarioRepository.Cadastrar(tipoUsuario);
+                _tipoEventoRepository.Cadastrar(tipoEvento);
                 return StatusCode(201);
+            }
+            catch (Exception error)
+            {
+                return BadRequest(error.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("Atualizar")]
+        public IActionResult Put(Guid id, TipoEvento tipoEvento)
+        {
+            try
+            {
+                _tipoEventoRepository.Atualizar(id, tipoEvento);
+                return Ok();
             }
             catch (Exception error)
             {
@@ -50,22 +65,7 @@ namespace webapi.event_.Controllers
         {
             try
             {
-                _tipoUsuarioRepository.Deletar(id);
-                return Ok();
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
-        }
-
-        [HttpPut]
-        [Route("Atualizar")]
-        public IActionResult Put(Guid id, TipoUsuario tipoUsuario)
-        {
-            try
-            {
-                _tipoUsuarioRepository.Atualizar(id, tipoUsuario);
+                _tipoEventoRepository.Deletar(id);
                 return Ok();
             }
             catch (Exception error)

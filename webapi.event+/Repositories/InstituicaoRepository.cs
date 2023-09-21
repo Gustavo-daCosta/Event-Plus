@@ -44,9 +44,13 @@ namespace webapi.event_.Repositories
         {
             try
             {
-                Instituicao instituicaoToBeRemoved = ctx.Instituicao.Single(i => i.IdInstituicao == id);
-                ctx.Instituicao.Remove(instituicaoToBeRemoved);
-                ctx.SaveChanges();
+                Instituicao instituicaoToBeRemoved = ctx.Instituicao.FirstOrDefault(i => i.IdInstituicao == id)!;
+
+                if (instituicaoToBeRemoved != null)
+                {
+                    ctx.Instituicao.Remove(instituicaoToBeRemoved);
+                    ctx.SaveChanges();
+                }
             }
             catch (Exception)
             { throw; }

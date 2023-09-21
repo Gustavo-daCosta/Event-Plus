@@ -11,11 +11,11 @@ namespace webapi.event_.Domains
 
         [Column(TypeName = "VARCHAR(150)")]
         [Required(ErrorMessage = "Nome do Evento é obrigatório")]
-        public string? NomeEvento { get; set; }
+        public string? Nome { get; set; }
 
         [Column(TypeName = "DATETIME")]
         [Required(ErrorMessage = "Data do Evento é obrigatória!")]
-        public DateTime DataEvento { get; set; }
+        public DateTime Data { get; set; }
 
         [Column(TypeName = "VARCHAR(200)")]
         [Required(ErrorMessage = "Descrição do Evento é obrigatório")]

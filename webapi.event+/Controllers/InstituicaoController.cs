@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using webapi.event_.Domains;
 using webapi.event_.Interfaces;
@@ -16,6 +17,7 @@ namespace webapi.event_.Controllers
 
         [HttpGet]
         [Route("ListarTodos")]
+        [Authorize]
         public IActionResult Get()
         {
             try
@@ -31,6 +33,7 @@ namespace webapi.event_.Controllers
 
         [HttpPost]
         [Route("Cadastrar")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Post(Instituicao instituicao)
         {
             try
@@ -46,6 +49,7 @@ namespace webapi.event_.Controllers
 
         [HttpPut]
         [Route("Atualizar")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Put(Guid id, Instituicao instituicao)
         {
             try
@@ -61,6 +65,7 @@ namespace webapi.event_.Controllers
 
         [HttpDelete]
         [Route("Deletar")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Delete(Guid id)
         {
             try

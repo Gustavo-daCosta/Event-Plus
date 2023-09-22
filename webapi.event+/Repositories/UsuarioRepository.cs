@@ -7,14 +7,14 @@ namespace webapi.event_.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {
-        private readonly EventContext _eventContext;
-        public UsuarioRepository() => _eventContext = new EventContext();
+        private readonly EventContext ctx;
+        public UsuarioRepository() => ctx = new EventContext();
 
         public Usuario BuscarPorEmailESenha(string email, string senha)
         {
             try
             {
-                Usuario usuarioBuscado = _eventContext.Usuario
+                Usuario usuarioBuscado = ctx.Usuario
                     .Select(u => new Usuario
                     {
                         IdUsuario = u.IdUsuario,
@@ -48,7 +48,7 @@ namespace webapi.event_.Repositories
         {
             try
             {
-                Usuario usuarioBuscado = _eventContext.Usuario
+                Usuario usuarioBuscado = ctx.Usuario
                     .Select(u => new Usuario
                     {
                         IdUsuario = u.IdUsuario,
@@ -73,12 +73,47 @@ namespace webapi.event_.Repositories
             {
                 usuario.Senha = Criptografia.GerarHash(usuario.Senha!);
 
-                _eventContext.Usuario.Add(usuario);
+                ctx.Usuario.Add(usuario);
 
-                _eventContext.SaveChanges();
+                ctx.SaveChanges();
             }
             catch (Exception)
             { throw; }
+        }
+
+        public List<PresencaEvento> ListarMeusEventos(Guid id)
+        {
+            List<PresencaEvento> listaEventos = ctx.PresencaEvento
+                .Where(pe => pe.IdUsuario == id)
+                .Select(pe => new PresencaEvento
+            {
+                IdPresencaEvento = pe.IdPresencaEvento,
+                Situacao = pe.Situacao,
+                IdEvento = pe.IdEvento,
+                Evento = new Evento
+                {
+                    IdEvento = pe.Evento!.IdEvento,
+                    Nome = pe.Evento!.Nome,
+                    Data = pe.Evento!.Data,
+                    Descricao = pe.Evento!.Descricao,
+                    IdInstituicao = pe.Evento!.IdInstituicao,
+                    Instituicao = new Instituicao
+                    {
+                        IdInstituicao = pe.Evento.Instituicao!.IdInstituicao,
+                        CNPJ = pe.Evento.Instituicao.CNPJ,
+                        Endereco = pe.Evento.Instituicao.Endereco,
+                        NomeFantasia = pe.Evento.Instituicao.NomeFantasia,
+                    },
+                    IdTipoEvento = pe.Evento!.IdTipoEvento,
+                    TipoEvento = new TipoEvento
+                    {
+                        IdTipoEvento = pe.Evento.TipoEvento!.IdTipoEvento,
+                        Titulo = pe.Evento.TipoEvento.Titulo,
+                    },
+                }
+            }).ToList();
+
+            return listaEventos;
         }
     }
 }

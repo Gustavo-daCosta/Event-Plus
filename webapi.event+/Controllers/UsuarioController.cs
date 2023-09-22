@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using webapi.event_.Domains;
 using webapi.event_.Interfaces;
@@ -31,12 +32,29 @@ namespace webapi.event_.Controllers
         
         [HttpGet]
         [Route("BuscarPorId")]
+        [Authorize]
         public IActionResult GetById(Guid id)
         {
             try
             {
                 Usuario usuarioBuscado = _usuarioRepository.BuscarPorId(id);
                 return StatusCode(200, usuarioBuscado);
+            }
+            catch (Exception error)
+            {
+                return BadRequest(error.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ListarMeusEventos")]
+        [Authorize]
+        public IActionResult GetMyEvents(Guid id)
+        {
+            try
+            {
+                List<PresencaEvento> listaPresencaEvento = _usuarioRepository.ListarMeusEventos(id);
+                return StatusCode(200, listaPresencaEvento);
             }
             catch (Exception error)
             {

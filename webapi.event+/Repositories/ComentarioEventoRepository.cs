@@ -113,7 +113,7 @@ namespace webapi.event_.Repositories
                 },
             }).ToList();
 
-            return ctx.ComentarioEvento.ToList();
+            return listaComentariosEvento;
         }
     }
 }

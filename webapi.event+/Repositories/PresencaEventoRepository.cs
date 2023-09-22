@@ -98,7 +98,7 @@ namespace webapi.event_.Repositories
                 }
             }).ToList();
 
-            return ctx.PresencaEvento.ToList();
+            return listaPresencasEvento;
         }
     }
 }

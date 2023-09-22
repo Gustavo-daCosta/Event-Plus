@@ -33,7 +33,7 @@ namespace webapi.event_.Repositories
         {
             try
             {
-                PresencaEvento presencaEventoBuscado = ctx.PresencaEvento.FirstOrDefault(tu => tu.IdPresencaEvento == id)!;
+                PresencaEvento presencaEventoBuscado = Listar().FirstOrDefault(tu => tu.IdPresencaEvento == id)!;
                 return presencaEventoBuscado;
             }
             catch (Exception)
@@ -68,6 +68,37 @@ namespace webapi.event_.Repositories
             { throw; }
         }
 
-        public List<PresencaEvento> Listar() => ctx.PresencaEvento.ToList();
+        public List<PresencaEvento> Listar()
+        {
+            List<PresencaEvento> listaPresencasEvento = ctx.PresencaEvento.Select(pe => new PresencaEvento
+            {
+                IdPresencaEvento = pe.IdPresencaEvento,
+                Situacao = pe.Situacao,
+                IdEvento = pe.IdEvento,
+                Evento = new Evento
+                {
+                    IdEvento = pe.Evento!.IdEvento,
+                    Nome = pe.Evento!.Nome,
+                    Data = pe.Evento!.Data,
+                    Descricao = pe.Evento!.Descricao,
+                    IdInstituicao = pe.Evento!.IdInstituicao,
+                    Instituicao = new Instituicao
+                    {
+                        IdInstituicao = pe.Evento.Instituicao!.IdInstituicao,
+                        CNPJ = pe.Evento.Instituicao.CNPJ,
+                        Endereco = pe.Evento.Instituicao.Endereco,
+                        NomeFantasia = pe.Evento.Instituicao.NomeFantasia,
+                    },
+                    IdTipoEvento = pe.Evento!.IdTipoEvento,
+                    TipoEvento = new TipoEvento
+                    {
+                        IdTipoEvento = pe.Evento.TipoEvento!.IdTipoEvento,
+                        Titulo = pe.Evento.TipoEvento.Titulo,
+                    },
+                }
+            }).ToList();
+
+            return ctx.PresencaEvento.ToList();
+        }
     }
 }

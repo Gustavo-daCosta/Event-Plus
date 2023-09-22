@@ -12,8 +12,8 @@ using webapi.event_.Context;
 namespace webapi.event_.Migrations
 {
     [DbContext(typeof(EventContext))]
-    [Migration("20230919173807_DB_v1")]
-    partial class DB_v1
+    [Migration("20230922174716_BD_v1")]
+    partial class BD_v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace webapi.event_.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DataEvento")
+                    b.Property<DateTime>("Data")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Descricao")
@@ -72,7 +72,7 @@ namespace webapi.event_.Migrations
                     b.Property<Guid>("IdTipoEvento")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("NomeEvento")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("VARCHAR(150)");
 

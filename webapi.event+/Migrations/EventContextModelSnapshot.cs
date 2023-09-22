@@ -56,7 +56,7 @@ namespace webapi.event_.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DataEvento")
+                    b.Property<DateTime>("Data")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Descricao")
@@ -69,7 +69,7 @@ namespace webapi.event_.Migrations
                     b.Property<Guid>("IdTipoEvento")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("NomeEvento")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("VARCHAR(150)");
 

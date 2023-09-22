@@ -28,7 +28,7 @@ namespace webapi.event_.Controllers
                 return BadRequest(error.Message);
             }
         }
-
+        
         [HttpGet]
         [Route("BuscarPorId")]
         public IActionResult GetById(Guid id)
@@ -36,21 +36,6 @@ namespace webapi.event_.Controllers
             try
             {
                 Usuario usuarioBuscado = _usuarioRepository.BuscarPorId(id);
-                return StatusCode(200, usuarioBuscado);
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("BuscarPorEmailESenha")]
-        public IActionResult GetByEmailAndPassword(Usuario usuario)
-        {
-            try
-            {
-                Usuario usuarioBuscado = _usuarioRepository.BuscarPorEmailESenha(usuario.Email!, usuario.Senha!);
                 return StatusCode(200, usuarioBuscado);
             }
             catch (Exception error)

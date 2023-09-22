@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace webapi.event_.Migrations
 {
     /// <inheritdoc />
-    public partial class DB_v1 : Migration
+    public partial class BD_v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,8 +54,8 @@ namespace webapi.event_.Migrations
                 columns: table => new
                 {
                     IdEvento = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NomeEvento = table.Column<string>(type: "VARCHAR(150)", nullable: false),
-                    DataEvento = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Nome = table.Column<string>(type: "VARCHAR(150)", nullable: false),
+                    Data = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     Descricao = table.Column<string>(type: "VARCHAR(200)", nullable: false),
                     IdTipoEvento = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IdInstituicao = table.Column<Guid>(type: "uniqueidentifier", nullable: false)

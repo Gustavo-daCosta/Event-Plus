@@ -29,6 +29,21 @@ namespace webapi.event_.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("BuscarPorId")]
+        public IActionResult GetById(Guid id)
+        {
+            try
+            {
+                Evento eventoBuscado = _eventoRepository.BuscarPorId(id);
+                return Ok(eventoBuscado);
+            }
+            catch (Exception error)
+            {
+                return BadRequest(error.Message);
+            }
+        }
+
         [HttpPost]
         [Route("Cadastrar")]
         public IActionResult Post(Evento evento)

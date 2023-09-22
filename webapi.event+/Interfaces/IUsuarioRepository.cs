@@ -9,5 +9,7 @@ namespace webapi.event_.Interfaces
         public Usuario BuscarPorId(Guid id);
 
         public Usuario BuscarPorEmailESenha(string email, string senha);
+
+        //xpublic List<Evento> ListarMeusEventos(Guid id);
     }
 }

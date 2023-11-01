@@ -1,14 +1,19 @@
 import React from 'react';
+import './Input.css';
 
-const Input = () => {
+const Input = (props) => {
     return (
         <div>
             <input
-                type="text"
-                id='numero1'
-                name='numero1'
-                placeholder='Primeiro Número'
+                type={props.tipo}
+                id={props.id}
+                name={props.nome}
+                placeholder={props.dicaCampo}
+                value={props.valor}
+                // Encapsular a função em uma arrow function para não executar na montagem/renderização do componente
+                onChange={(e) => props.fnAlterar(e.target.value)}
             />
+            <span>{props.valor}</span>
         </div>
     );
 };

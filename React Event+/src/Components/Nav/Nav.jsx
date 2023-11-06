@@ -5,10 +5,13 @@ import './Nav.css'
 import logoMobile from '../../assets/images/logo-white.svg';
 import logoDesktop from '../../assets/images/logo-pink.svg';
 
-const Nav = () => {
+const Nav = ( { exibeNavBar, setExibeNavBar } ) => {
     return (
-        <nav className='navbar'>
-            <span className='navbar__close'>x</span>
+        <nav className={`navbar ${exibeNavBar ? "exibeNavbar": ""}`}>
+            <span
+                className='navbar__close'
+                onClick={() => setExibeNavBar(false)}
+            >x</span>
 
             <Link to="/">
                 <img

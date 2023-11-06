@@ -1,10 +1,10 @@
 import React from 'react';
 import './Container.css';
 
-const Container = ( { chilren } ) => {
+const Container = ( { children } ) => {
     return (
         <div className='container'>
-            {chilren}
+            {children}
         </div>
     );
 };

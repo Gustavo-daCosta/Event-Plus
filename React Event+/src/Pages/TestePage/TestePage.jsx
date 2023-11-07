@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Input from '../../Components/Input/Input';
 import Button from '../../Components/Button/Button';
+import Title from '../../Components/Title/Title';
 import './TestePage.css';
 
 const TestePage = () => {
@@ -15,7 +16,7 @@ const TestePage = () => {
 
     return (
         <>
-            <h1>Página de Testes</h1>
+            <Title titleText={"Calculadora"} />
             <h2>Calculator</h2>
             <form onSubmit={handleCalcular}>
                 <Input // Passando a "props" (propriedades)

@@ -1,11 +1,35 @@
 import React from 'react';
+import './TipoEventosPage.css';
 import Title from '../../Components/Title/Title';
+import MainContent from '../../Components/MainContent/MainContent';
+import ImageIllustrator from '../../Components/ImageIllustrator/ImageIllustrator';
+import Container from '../../Components/Container/Container';
+import { Input } from '../../Components/FormComponents/FormComponents';
+
+import eventTypeImage from '../../assets/images/tipo-evento.svg';
 
 const TipoEventosPage = () => {
     return (
-        <>
-            <Title titleText={"TipoEventos"} />
-        </>
+        <MainContent>
+            <section className="cadastro-evento-section">
+                <Container>
+                    <div className="cadastro-evento__box">
+                        <Title titleText={"Página Tipos de Eventos"} />
+                        <ImageIllustrator
+                            alterText={"???"}
+                            imageRender={eventTypeImage}
+                        />
+                        <form action="">
+                            <p>Componente de Formulário</p>
+                            <Input
+                                type={"number"}
+                                required={"required"}
+                            />
+                        </form>
+                    </div>
+                </Container>
+            </section>
+        </MainContent>
     );
 };
 

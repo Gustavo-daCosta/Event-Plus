@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './TipoEventosPage.css';
 import Title from '../../Components/Title/Title';
 import MainContent from '../../Components/MainContent/MainContent';
 import ImageIllustrator from '../../Components/ImageIllustrator/ImageIllustrator';
 import Container from '../../Components/Container/Container';
-import { Input } from '../../Components/FormComponents/FormComponents';
+import { Input, Button } from '../../Components/FormComponents/FormComponents';
 
 import eventTypeImage from '../../assets/images/tipo-evento.svg';
 
 const TipoEventosPage = () => {
+    const [frmEdit, setFrmEdit] = useState(true);
+    const [titulo, setTitulo] = useState();
+
+    function handleSubmit() {
+        alert("Bora Cadastrar");
+    }
+
+    function handleUpdate() {
+        alert("Bora Atualizar");
+    }
+
     return (
         <MainContent>
             <section className="cadastro-evento-section">
@@ -19,11 +30,26 @@ const TipoEventosPage = () => {
                             alterText={"???"}
                             imageRender={eventTypeImage}
                         />
-                        <form action="">
-                            <p>Componente de Formulário</p>
-                            <Input
-                                type={"number"}
-                                required={"required"}
+
+                        <form onSubmit={frmEdit ? handleUpdate : handleSubmit}>
+                            {!frmEdit ? 
+                            <>
+                                <Input
+                                    type={"text"}
+                                    id={"titulo"}
+                                    name={"titulo"}
+                                    placeholder={"Título"}
+                                    required={"required"}
+                                    value={titulo}
+                                    manipulationFunction={(e) => {
+                                        setTitulo(e.target.value);
+                                    }}
+                                />
+                            </>
+                            : (<p>Tela de Edição</p>) }
+                            <Button
+                                id={""}
+                                textButton={"Cadastrar"}
                             />
                         </form>
                     </div>

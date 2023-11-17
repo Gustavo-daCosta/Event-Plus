@@ -4,7 +4,7 @@ import './TableTp.css';
 import editPen from '../../../assets/images/edit-pen.svg';
 import trashDelete from '../../../assets/images/trash-delete.svg';
 
-const TableTp = ( { dados, fnUpdate = null, fnDelete = null } ) => {
+const TableTp = ( { dados, fnUpdate, fnDelete } ) => {
     return (
         <table className='table-data'>
             <thead className="table-data__head">
@@ -39,8 +39,8 @@ const TableTp = ( { dados, fnUpdate = null, fnDelete = null } ) => {
                                     <img
                                         className="table-data__icon"
                                         src={trashDelete} alt=""
-                                        onClick={() => {
-                                            fnDelete();
+                                        onClick={(e) => {
+                                            fnDelete(e.idTipoEvento);
                                         }}
                                     />
                                 </td>

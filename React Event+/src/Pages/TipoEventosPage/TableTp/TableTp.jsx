@@ -29,9 +29,7 @@ const TableTp = ( { dados, fnUpdate, fnDelete } ) => {
                                     <img
                                         className="table-data__icon"
                                         src={editPen} alt=""
-                                        onClick={() => {
-                                            fnUpdate();
-                                        }}
+                                        onClick={() => fnUpdate(tipoEvento.idTipoEvento)}
                                     />
                                 </td>
 
@@ -39,9 +37,7 @@ const TableTp = ( { dados, fnUpdate, fnDelete } ) => {
                                     <img
                                         className="table-data__icon"
                                         src={trashDelete} alt=""
-                                        onClick={(e) => {
-                                            fnDelete(e.idTipoEvento);
-                                        }}
+                                        onClick={() => fnDelete(tipoEvento.idTipoEvento)}
                                     />
                                 </td>
                             </tr>

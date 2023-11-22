@@ -11,6 +11,7 @@ import TableTp from './TableTp/TableTp';
 import Spinner from '../../Components/Spinner/Spinner';
 
 import eventTypeImage from '../../assets/images/tipo-evento.svg';
+import notifier from '../../Utils/notifier';
 
 const TipoEventosPage = () => {
     const [frmEdit, setFrmEdit] = useState(false);
@@ -18,62 +19,33 @@ const TipoEventosPage = () => {
     const [tipoEventos, setTipoEventos] = useState([]);
     const [notifyUser, setNotifyUser] = useState({});
     const [idEvento, setIdEvento] = useState("");
-    const [showSpinner, setShowSpinner] = useState(false)
-
-    function notifier(type, textNote) {
-        let titleNote;
-        let imgAlt;
-
-        if (type.toLowerCase() === "success") {
-            titleNote = "Sucesso";
-            imgAlt = "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.";
-        } else if (type.toLowerCase() === "error") {
-            titleNote = "Erro";
-            imgAlt = "Imagem de ilustração de erro.";
-        } else {
-            titleNote = "Aviso"
-            imgAlt = "Imagem de ilustração de aviso.";
-        }
-
-        return setNotifyUser({
-            titleNote,
-            textNote,
-            imgIcon: type,
-            imgAlt,
-            showMessage: true
-        });
-    }
+    const [showSpinner, setShowSpinner] = useState(false);
 
     useEffect(() => {
         async function getTipoEventos() {
+            setShowSpinner(true);
             try {
                 const promise = await api.get("/TiposEvento");
                 setTipoEventos(promise.data);
             } catch (error) {
                 console.log("Deu ruim na api");
             }
+            setShowSpinner(false);
         }
         getTipoEventos();
-    }, tipoEventos);
+    }, []);
 
     async function handleSubmit(e) {
         e.preventDefault();
 
         if (titulo.trim().length < 3) {
-            alert("O título deve ter no mínimo 3 caracteres");
+            notifier("advice", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
             return;
         }
 
         try {
             const retorno = await api.post("/TiposEvento", { titulo: titulo });
-            notifier("success", "Cadastrado com sucesso");
-            // setNotifyUser({
-            //     titleNote: "Sucesso",
-            //     textNote: "Cadastrado com sucesso!",
-            //     imgIcon: "success",
-            //     imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
-            //     showMessage: true
-            // });
+            notifier("success", "Cadastrado com sucesso", setNotifyUser);
             setTitulo(""); // Limpa a variável
         } catch (error) {
             console.log("Deu ruim na API!");
@@ -82,21 +54,23 @@ const TipoEventosPage = () => {
     }
 
     // Atualização dos dados
-    function showUpdateForm() {
-        alert("Mostrando a tela de Update");
+    async function showUpdateForm(idElemento) {
+        setFrmEdit(true);
+
+        try {
+            const retorno =  await api.get("/TiposEvento/" + idElemento);
+            setTitulo(retorno.data.titulo);
+            setIdEvento(idElemento);
+        } catch (error) {
+            notifier("danger", "Erro ao listar os Tipos de Eventos.", setNotifyUser);
+        }
     }
 
     async function handleUpdate(e) {
         e.preventDefault();
 
         if (titulo.trim().length < 3) {
-            setNotifyUser({
-                titleNote: "Erro",
-                textNote: "O título deve conter no mínimo 3 caracteres!",
-                imgIcon: "danger",
-                imgAlt: "Imagem de ilustração de erro.",
-                showMessage: true
-            });
+            notifier("danger", "O título deve conter no mínimo 3 caracteres!", setNotifyUser);
             return;
         }
 
@@ -104,54 +78,29 @@ const TipoEventosPage = () => {
             const retorno = await api.put('/TiposEvento/' + idEvento, {
                 titulo: titulo
             });
-
-            setNotifyUser({
-                titleNote: "Sucesso",
-                textNote: "Editado com sucesso!",
-                imgIcon: "success",
-                imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
-                showMessage: true
-            });
+            notifier("success", "Editado com sucesso!", setNotifyUser);
 
             const retornoGet = await api.get('/TiposEvento');
             setTipoEventos(retornoGet.data);
             editActionAbort();
         } catch (error) {
-            setNotifyUser({
-                titleNote: "Erro",
-                textNote: "Problemas na atualização. Verifique a conexão com a internet!",
-                imgIcon: "danger",
-                imgAlt: "Imagem de ilustração de erro.",
-                showMessage: true
-            });
+            notifier("danger", "Problemas na atualização. Verifique a conexão com a internet!", setNotifyUser);
         }
     }
 
     function editActionAbort() {
-        setIdEvento(null);
         setFrmEdit(false);
         setTitulo("");
+        setIdEvento(null);
     }
 
     async function handleDelete(id) {
         try {
             const retorno = await api.delete(`/TiposEvento/${id}`);
-            setNotifyUser({
-                titleNote: "Sucesso",
-                textNote: "Deletado com sucesso!",
-                imgIcon: "success",
-                imgAlt: "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
-                showMessage: true
-            });
+            notifier("success", "Deletado com sucesso!", setNotifyUser);
             tipoEventos.filter((tipoEvento) => tipoEvento.idTipoEvento !== id);
         } catch (error) {
-            setNotifyUser({
-                titleNote: "Erro",
-                textNote: "Problemas ao deletar. Verifique a conexão com a internet!",
-                imgIcon: "danger",
-                imgAlt: "Imagem de ilustração de erro.",
-                showMessage: true
-            });
+            notifier("danger", "Problemas ao deletar. Verifique a conexão com a internet!", setNotifyUser);
         }
     }
 
@@ -164,7 +113,7 @@ const TipoEventosPage = () => {
             <section className="cadastro-evento-section">
                 <Container>
                     <div className="cadastro-evento__box">
-                        <Title titleText={"Página Tipos de Eventos"} />
+                        <Title titleText={"Tipos de Eventos"} />
                         <ImageIllustrator
                             alterText={"???"}
                             imageRender={eventTypeImage}
@@ -215,6 +164,13 @@ const TipoEventosPage = () => {
                                             name={"cancelar"}
                                             textButton={"Cancelar"}
                                             manipulationFunction={editActionAbort}
+                                            additionalClass={"button-component--midle"}
+                                        />
+                                        <Button
+                                            type={"submit"}
+                                            id={"atualizar"}
+                                            name={"atualizar"}
+                                            textButton={"Atualizar"}
                                             additionalClass={"button-component--midle"}
                                         />
                                     </div>

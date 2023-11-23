@@ -4,30 +4,54 @@ import MainContent from '../../Components/MainContent/MainContent';
 import Notification from '../../Components/Notification/Notification';
 import Container from '../../Components/Container/Container';
 import ImageIllustrator from '../../Components/ImageIllustrator/ImageIllustrator';
-import { Input } from '../../Components/FormComponents/FormComponents';
+import { Input, Button, Select } from '../../Components/FormComponents/FormComponents';
 import TableEv from './TableEv/TableEv';
 
+// import notifier from '../../Utils/notifier';
 import api from '../../Services/Service';
 import eventImage from '../../assets/images/evento.svg';
 
 const EventosPage = () => {
     const [frmEdit, setFrmEdit] = useState(false);
-    const [eventos, setEventos] = useState([
-        {
-            "idEvento": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            "dataEvento": "2023-11-25T19:55:15.394Z",
-            "nomeEvento": "string",
-            "descricao": "string",
-            "idTipoEvento": "867175ab-0848-48ff-9e43-928371624419",
-            "idInstituicao": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        },
-    ]);
+    const [eventos, setEventos] = useState([]);
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
-    // const [tipoEvento, setTipoEvento] = useState("");
+    const [idTipoEvento, setIdTipoEvento] = useState("");
+    const [instituicoes, setInstituicoes] = useState([{
+            "idInstituicao": "b8e060fa-4a53-4ecf-b781-95856b63183d",
+            "cnpj": "18571757000109",
+            "endereco": "Rua Quatorze de Outubro",
+            "nomeFantasia": "SENAI"
+        }]);
+    const [tiposEvento, setTiposEvento] = useState([]);
     const [data, setData] = useState("");
     const [notifyUser, setNotifyUser] = useState({});
+
+    function notifier(type, textNote, notifyUserFunction) {
+        type.toLowerCase();
+        let titleNote = type === "success" ?
+        "Sucesso" : type === "error" ?
+        "Erro" : "Aviso";
     
+        let imgAlt = type === "success" ?
+        "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok."
+        : type === "error" ? "Imagem de ilustração de erro."
+        : "Imagem de ilustração de aviso.";
+    
+        return notifyUserFunction({
+            titleNote,
+            textNote,
+            imgIcon: type,
+            imgAlt,
+            showMessage: true
+        });
+    }
+
+    async function updateList() {
+        const promise = await api.get("/Evento");
+        setEventos(promise.data);
+    }
+
     useEffect(() => {
         async function getEventos() {
             try {
@@ -38,22 +62,81 @@ const EventosPage = () => {
             }
         }
         getEventos();
+
+        async function getTiposEvento() {
+            try {
+                const promise = await api.get("/TiposEvento");
+                console.log(promise.data);
+                setTiposEvento(promise.data);
+            } catch (error) {
+                console.log("deu ruim na API"); // Trocar para notifier
+            }
+        }
+        getTiposEvento();
     }, []);
 
-    function handleSubmit() {
-        alert("Cadastrar evento");
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        if (nome.trim().length < 3) {
+            notifier("advice", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
+            return;
+        }
+
+        try {
+
+        } catch (error) {
+            const promise = await api.post("/Evento", {
+                nomeEvento: nome,
+                descricao,
+                dataEvento: data,
+                idTipoEvento: idTipoEvento,
+                instituicao: instituicoes[0]
+            });
+            notifier("success", "Cadastrado com sucesso", setNotifyUser);
+
+            setNome("");
+            setDescricao("");
+            setData("");
+            setIdTipoEvento("");
+            updateList();
+        }
     }
 
-    function handleUpdate() {
+    function handleUpdate(e) {
+        e.preventDefault();
+
         alert("Atualizar evento");
     }
 
-    function showUpdateForm() {
-        alert("ShowUpdateForm");
+    function editActionAbort() {
+        setFrmEdit(false);
+        setNome("");
+        setDescricao("");
+        setData("");
     }
 
-    async function handleDelete() {
-        alert("Handle delete");
+    async function showUpdateForm(idElemento) {
+        setFrmEdit(true);
+
+        try {
+            const retorno = await api.get("/Evento/" + idElemento);
+            setNome(retorno.data.nomeEvento);
+            setDescricao(retorno.data.descricao);
+            setData(new Date(retorno.data.dataEvento).toLocaleDateString());
+        } catch (error) {
+            notifier("danger", "Erro ao listar os Eventos.", setNotifyUser);
+        }
+    }
+
+    async function handleDelete(id) {
+        try {
+            const retorno = await api.delete(`/Evento/${id}`);
+            notifier("success", "Deletado com sucesso!", setNotifyUser);
+            updateList();
+        } catch (error) {
+            notifier("danger", "Problemas ao deletar. Verifique a conexão com a internet!", setNotifyUser);
+        }
     }
 
     return (
@@ -72,7 +155,7 @@ const EventosPage = () => {
                             className='ftipo-evento'
                             onSubmit={frmEdit ? handleUpdate : handleSubmit}
                         >
-                            { !frmEdit ? (
+                            {!frmEdit ? (
                                 <>
                                     <Input
                                         type={"text"}
@@ -81,7 +164,7 @@ const EventosPage = () => {
                                         placeholder={"Nome"}
                                         required={"required"}
                                         value={nome}
-                                        manipulationFunction={(e) => setNome(e.targe.value)}
+                                        manipulationFunction={(e) => setNome(e.target.value)}
                                     />
                                     <Input
                                         type={"text"}
@@ -90,7 +173,15 @@ const EventosPage = () => {
                                         placeholder={"Descrição"}
                                         required={"required"}
                                         value={descricao}
-                                        manipulationFunction={(e) => setDescricao(e.targe.value)}
+                                        manipulationFunction={(e) => setDescricao(e.target.value)}
+                                    />
+                                    <Select
+                                        id={"tipoEvento"}
+                                        name={"tipoEvento"}
+                                        required={"required"}
+                                        dados={tiposEvento}
+                                        manipulationFunction={(e) => setTiposEvento(e.target.value)}
+                                        // Alterar variável dos dados e do manipulation function (usar variaveis diferentes para cada um)
                                     />
                                     <Input
                                         type={"date"}
@@ -99,12 +190,61 @@ const EventosPage = () => {
                                         placeholder={"dd/mm/aaaa"}
                                         required={"required"}
                                         value={data}
-                                        manipulationFunction={(e) => setData(e.targe.value)}
+                                        manipulationFunction={(e) => setData(e.target.value)}
+                                    />
+                                    <Button
+                                        type={"submit"}
+                                        id={"cadastrar"}
+                                        name={"cadastrar"}
+                                        textButton={"Cadastrar"}
                                     />
                                 </>
                             ) : (
                                 <>
-                                    <p>Form de edição</p>
+                                    <Input
+                                        type={"text"}
+                                        id={"nome"}
+                                        name={"nome"}
+                                        placeholder={"Nome"}
+                                        required={"required"}
+                                        value={nome}
+                                        manipulationFunction={(e) => setNome(e.target.value)}
+                                    />
+                                    <Input
+                                        type={"text"}
+                                        id={"descricao"}
+                                        name={"descricao"}
+                                        placeholder={"Descrição"}
+                                        required={"required"}
+                                        value={descricao}
+                                        manipulationFunction={(e) => setDescricao(e.target.value)}
+                                    />
+                                    <Input
+                                        type={"date"}
+                                        id={"nome"}
+                                        name={"nome"}
+                                        placeholder={"dd/mm/aaaa"}
+                                        required={"required"}
+                                        value={data}
+                                        manipulationFunction={(e) => setData(e.target.value)}
+                                    />
+                                    <div className='buttons-editbox'>
+                                        <Button
+                                            type={"button"}
+                                            id={"cancelar"}
+                                            name={"cancelar"}
+                                            textButton={"Cancelar"}
+                                            manipulationFunction={editActionAbort}
+                                            additionalClass={"button-component--midle"}
+                                        />
+                                        <Button
+                                            type={"submit"}
+                                            id={"cadastrar"}
+                                            name={"cadastrar"}
+                                            textButton={"Cadastrar"}
+                                            additionalClass={"button-component--midle"}
+                                        />
+                                    </div>
                                 </>
                             )}
                         </form>

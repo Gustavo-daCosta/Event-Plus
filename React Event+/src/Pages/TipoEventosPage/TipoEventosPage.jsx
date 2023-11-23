@@ -11,7 +11,7 @@ import TableTp from './TableTp/TableTp';
 import Spinner from '../../Components/Spinner/Spinner';
 
 import eventTypeImage from '../../assets/images/tipo-evento.svg';
-import notifier from '../../Utils/notifier';
+// import notifier from '../../Utils/notifier';
 
 const TipoEventosPage = () => {
     const [frmEdit, setFrmEdit] = useState(false);
@@ -20,6 +20,31 @@ const TipoEventosPage = () => {
     const [notifyUser, setNotifyUser] = useState({});
     const [idEvento, setIdEvento] = useState("");
     const [showSpinner, setShowSpinner] = useState(false);
+
+    function notifier(type, textNote, notifyUserFunction) {
+        type.toLowerCase();
+        let titleNote = type === "success" ?
+        "Sucesso" : type === "error" ?
+        "Erro" : "Aviso";
+    
+        let imgAlt = type === "success" ?
+        "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok."
+        : type === "error" ? "Imagem de ilustração de erro."
+        : "Imagem de ilustração de aviso.";
+    
+        return notifyUserFunction({
+            titleNote,
+            textNote,
+            imgIcon: type,
+            imgAlt,
+            showMessage: true
+        });
+    }
+
+    async function updateList() {
+        const promise = await api.get("/TiposEvento");
+        setTipoEventos(promise.data);
+    }
 
     useEffect(() => {
         async function getTipoEventos() {
@@ -44,9 +69,10 @@ const TipoEventosPage = () => {
         }
 
         try {
-            const retorno = await api.post("/TiposEvento", { titulo: titulo });
+            const promise = await api.post("/TiposEvento", { titulo: titulo });
             notifier("success", "Cadastrado com sucesso", setNotifyUser);
             setTitulo(""); // Limpa a variável
+            updateList();
         } catch (error) {
             console.log("Deu ruim na API!");
             console.log(error);
@@ -80,8 +106,7 @@ const TipoEventosPage = () => {
             });
             notifier("success", "Editado com sucesso!", setNotifyUser);
 
-            const retornoGet = await api.get('/TiposEvento');
-            setTipoEventos(retornoGet.data);
+            updateList();
             editActionAbort();
         } catch (error) {
             notifier("danger", "Problemas na atualização. Verifique a conexão com a internet!", setNotifyUser);
@@ -98,7 +123,7 @@ const TipoEventosPage = () => {
         try {
             const retorno = await api.delete(`/TiposEvento/${id}`);
             notifier("success", "Deletado com sucesso!", setNotifyUser);
-            tipoEventos.filter((tipoEvento) => tipoEvento.idTipoEvento !== id);
+            updateList();
         } catch (error) {
             notifier("danger", "Problemas ao deletar. Verifique a conexão com a internet!", setNotifyUser);
         }

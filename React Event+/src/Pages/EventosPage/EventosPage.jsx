@@ -6,6 +6,8 @@ import Container from '../../Components/Container/Container';
 import ImageIllustrator from '../../Components/ImageIllustrator/ImageIllustrator';
 import { Input, Button, Select } from '../../Components/FormComponents/FormComponents';
 import TableEv from './TableEv/TableEv';
+import { dateFormatToForm } from '../../Utils/stringFunction';
+import { notifier } from '../../Utils/notifier';
 
 // import notifier from '../../Utils/notifier';
 import api from '../../Services/Service';
@@ -14,38 +16,19 @@ import eventImage from '../../assets/images/evento.svg';
 const EventosPage = () => {
     const [frmEdit, setFrmEdit] = useState(false);
     const [eventos, setEventos] = useState([]);
+    const [idEvento, setIdEvento] = useState("");
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
-    const [idTipoEvento, setIdTipoEvento] = useState("");
     const [instituicoes, setInstituicoes] = useState([{
-            "idInstituicao": "b8e060fa-4a53-4ecf-b781-95856b63183d",
-            "cnpj": "18571757000109",
-            "endereco": "Rua Quatorze de Outubro",
-            "nomeFantasia": "SENAI"
-        }]);
+        "idInstituicao": "b8e060fa-4a53-4ecf-b781-95856b63183d",
+        "cnpj": "18571757000109",
+        "endereco": "Rua Quatorze de Outubro",
+        "nomeFantasia": "SENAI"
+    }]);
     const [tiposEvento, setTiposEvento] = useState([]);
+    const [idTipoEvento, setIdTipoEvento] = useState("");
     const [data, setData] = useState("");
     const [notifyUser, setNotifyUser] = useState({});
-
-    function notifier(type, textNote, notifyUserFunction) {
-        type.toLowerCase();
-        let titleNote = type === "success" ?
-        "Sucesso" : type === "error" ?
-        "Erro" : "Aviso";
-    
-        let imgAlt = type === "success" ?
-        "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok."
-        : type === "error" ? "Imagem de ilustração de erro."
-        : "Imagem de ilustração de aviso.";
-    
-        return notifyUserFunction({
-            titleNote,
-            textNote,
-            imgIcon: type,
-            imgAlt,
-            showMessage: true
-        });
-    }
 
     async function updateList() {
         const promise = await api.get("/Evento");
@@ -58,7 +41,7 @@ const EventosPage = () => {
                 const promise = await api.get("/Evento");
                 setEventos(promise.data);
             } catch (error) {
-                console.log("deu ruim na API");
+                console.log("deu ruim na API"); // Trocar para notifier
             }
         }
         getEventos();
@@ -66,7 +49,6 @@ const EventosPage = () => {
         async function getTiposEvento() {
             try {
                 const promise = await api.get("/TiposEvento");
-                console.log(promise.data);
                 setTiposEvento(promise.data);
             } catch (error) {
                 console.log("deu ruim na API"); // Trocar para notifier
@@ -74,6 +56,12 @@ const EventosPage = () => {
         }
         getTiposEvento();
     }, []);
+
+    async function encontrarTipoEvento() {
+        // console.log(tiposEvento);
+        // console.log("IdTipoEvento");
+        // console.log(idTipoEvento);
+    }
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -83,30 +71,51 @@ const EventosPage = () => {
             return;
         }
 
-        try {
+        // Todo:
+        // Dentro da API criar uma exceção para evitar que uma data que já passou seja cadastrada
 
-        } catch (error) {
-            const promise = await api.post("/Evento", {
+        try {
+            await api.post("/Evento", {
                 nomeEvento: nome,
                 descricao,
                 dataEvento: data,
-                idTipoEvento: idTipoEvento,
-                instituicao: instituicoes[0]
+                idTipoEvento,
+                idInstituicao: instituicoes[0].idInstituicao,
             });
             notifier("success", "Cadastrado com sucesso", setNotifyUser);
 
             setNome("");
             setDescricao("");
             setData("");
-            setIdTipoEvento("");
             updateList();
+        } catch (error) {
+            notifier("danger", "Problemas ao cadastrar. Verifique a conexão com a internet!", setNotifyUser);
         }
     }
 
-    function handleUpdate(e) {
+    async function handleUpdate(e) {
         e.preventDefault();
 
-        alert("Atualizar evento");
+        if (nome.trim().length < 3) {
+            notifier("advice", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
+            return;
+        }
+
+        try {
+            await api.put("/Evento/" + idEvento, {
+                nomeEvento: nome,
+                descricao,
+                dataEvento: data,
+                idTipoEvento,
+                idInstituicao: instituicoes[0].idInstituicao,
+            });
+            notifier("success", "Atualizado com sucesso!", setNotifyUser);
+
+            updateList();
+            editActionAbort();
+        } catch (error) {
+            notifier("danger", "Problemas ao atualizar. Verifique a conexão com a internet!", setNotifyUser);
+        }
     }
 
     function editActionAbort() {
@@ -118,12 +127,16 @@ const EventosPage = () => {
 
     async function showUpdateForm(idElemento) {
         setFrmEdit(true);
-
+        
         try {
-            const retorno = await api.get("/Evento/" + idElemento);
-            setNome(retorno.data.nomeEvento);
-            setDescricao(retorno.data.descricao);
-            setData(new Date(retorno.data.dataEvento).toLocaleDateString());
+            encontrarTipoEvento();
+            const promise = await api.get("/Evento/" + idElemento);
+            setIdEvento(idElemento);
+            setNome(promise.data.nomeEvento);
+            setDescricao(promise.data.descricao);
+            
+            // setIdTipoEvento(promise.data.idTipoEvento);
+            setData(dateFormatToForm(promise.data.dataEvento));
         } catch (error) {
             notifier("danger", "Erro ao listar os Eventos.", setNotifyUser);
         }
@@ -131,7 +144,7 @@ const EventosPage = () => {
 
     async function handleDelete(id) {
         try {
-            const retorno = await api.delete(`/Evento/${id}`);
+            await api.delete(`/Evento/${id}`);
             notifier("success", "Deletado com sucesso!", setNotifyUser);
             updateList();
         } catch (error) {
@@ -180,8 +193,8 @@ const EventosPage = () => {
                                         name={"tipoEvento"}
                                         required={"required"}
                                         dados={tiposEvento}
-                                        manipulationFunction={(e) => setTiposEvento(e.target.value)}
-                                        // Alterar variável dos dados e do manipulation function (usar variaveis diferentes para cada um)
+                                        value={idTipoEvento}
+                                        manipulationFunction={(e) => setIdTipoEvento(e.target.value)}
                                     />
                                     <Input
                                         type={"date"}
@@ -219,6 +232,14 @@ const EventosPage = () => {
                                         value={descricao}
                                         manipulationFunction={(e) => setDescricao(e.target.value)}
                                     />
+                                    <Select
+                                        id={"tipoEvento"}
+                                        name={"tipoEvento"}
+                                        required={"required"}
+                                        dados={tiposEvento}
+                                        value={idTipoEvento}
+                                        manipulationFunction={(e) => setIdTipoEvento(e.target.value)}
+                                    />
                                     <Input
                                         type={"date"}
                                         id={"nome"}
@@ -239,9 +260,9 @@ const EventosPage = () => {
                                         />
                                         <Button
                                             type={"submit"}
-                                            id={"cadastrar"}
-                                            name={"cadastrar"}
-                                            textButton={"Cadastrar"}
+                                            id={"atualizar"}
+                                            name={"atualizar"}
+                                            textButton={"Atualizar"}
                                             additionalClass={"button-component--midle"}
                                         />
                                     </div>

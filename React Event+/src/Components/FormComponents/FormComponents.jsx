@@ -31,6 +31,7 @@ export const Button = ({
     id,
     name,
     type,
+    manipulationFunction,
     additionalClass
 }) => {
     return (
@@ -39,6 +40,7 @@ export const Button = ({
             name={name}
             id={id}
             className={`button-component ${additionalClass}`}
+            onClick={manipulationFunction}
         >
             {textButton}
         </button>
@@ -52,7 +54,7 @@ export const Select = ({
     required,
     additionalClass = "",
     manipulationFunction,
-    defaultValue
+    value
 }) => {
     return (
         <select
@@ -61,7 +63,8 @@ export const Select = ({
             required={required}
             className={`input-component ${additionalClass}`}
             onChange={manipulationFunction}
-            value={defaultValue}
+            // value={defaultValue}
+            // defaultValue={""}
         >
             <option value="">Selecione</option>
             {

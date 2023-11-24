@@ -1,4 +1,4 @@
-function notifier(type, textNote, notifyUserFunction) {
+export const notifier = (type, textNote, notifyUserFunction) => {
     type.toLowerCase();
     let titleNote = type === "success" ?
     "Sucesso" : type === "error" ?

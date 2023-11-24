@@ -11,7 +11,7 @@ import TableTp from './TableTp/TableTp';
 import Spinner from '../../Components/Spinner/Spinner';
 
 import eventTypeImage from '../../assets/images/tipo-evento.svg';
-// import notifier from '../../Utils/notifier';
+import { notifier } from '../../Utils/notifier';
 
 const TipoEventosPage = () => {
     const [frmEdit, setFrmEdit] = useState(false);
@@ -20,26 +20,6 @@ const TipoEventosPage = () => {
     const [notifyUser, setNotifyUser] = useState({});
     const [idEvento, setIdEvento] = useState("");
     const [showSpinner, setShowSpinner] = useState(false);
-
-    function notifier(type, textNote, notifyUserFunction) {
-        type.toLowerCase();
-        let titleNote = type === "success" ?
-        "Sucesso" : type === "error" ?
-        "Erro" : "Aviso";
-    
-        let imgAlt = type === "success" ?
-        "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok."
-        : type === "error" ? "Imagem de ilustração de erro."
-        : "Imagem de ilustração de aviso.";
-    
-        return notifyUserFunction({
-            titleNote,
-            textNote,
-            imgIcon: type,
-            imgAlt,
-            showMessage: true
-        });
-    }
 
     async function updateList() {
         const promise = await api.get("/TiposEvento");
@@ -53,7 +33,8 @@ const TipoEventosPage = () => {
                 const promise = await api.get("/TiposEvento");
                 setTipoEventos(promise.data);
             } catch (error) {
-                console.log("Deu ruim na api");
+                notifier("danger", "Problemas ao deletar. Verifique a conexão com a internet!", setNotifyUser);
+                console.log(error);
             }
             setShowSpinner(false);
         }
@@ -69,12 +50,12 @@ const TipoEventosPage = () => {
         }
 
         try {
-            const promise = await api.post("/TiposEvento", { titulo: titulo });
+            await api.post("/TiposEvento", { titulo: titulo });
             notifier("success", "Cadastrado com sucesso", setNotifyUser);
             setTitulo(""); // Limpa a variável
             updateList();
         } catch (error) {
-            console.log("Deu ruim na API!");
+            notifier("danger", "Problemas ao cadastrar. Verifique a conexão com a internet!", setNotifyUser);
             console.log(error);
         }
     }
@@ -101,10 +82,10 @@ const TipoEventosPage = () => {
         }
 
         try {
-            const retorno = await api.put('/TiposEvento/' + idEvento, {
+            await api.put('/TiposEvento/' + idEvento, {
                 titulo: titulo
             });
-            notifier("success", "Editado com sucesso!", setNotifyUser);
+            notifier("success", "Atualizado com sucesso!", setNotifyUser);
 
             updateList();
             editActionAbort();
@@ -121,7 +102,7 @@ const TipoEventosPage = () => {
 
     async function handleDelete(id) {
         try {
-            const retorno = await api.delete(`/TiposEvento/${id}`);
+            await api.delete(`/TiposEvento/${id}`);
             notifier("success", "Deletado com sucesso!", setNotifyUser);
             updateList();
         } catch (error) {

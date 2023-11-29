@@ -45,7 +45,7 @@ const TipoEventosPage = () => {
         e.preventDefault();
 
         if (titulo.trim().length < 3) {
-            notifier("advice", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
+            notifier("warning", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
             return;
         }
 

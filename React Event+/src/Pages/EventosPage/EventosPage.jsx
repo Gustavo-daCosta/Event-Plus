@@ -67,7 +67,7 @@ const EventosPage = () => {
         e.preventDefault();
 
         if (nome.trim().length < 3) {
-            notifier("advice", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
+            notifier("warning", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
             return;
         }
 
@@ -97,7 +97,7 @@ const EventosPage = () => {
         e.preventDefault();
 
         if (nome.trim().length < 3) {
-            notifier("advice", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
+            notifier("warning", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
             return;
         }
 

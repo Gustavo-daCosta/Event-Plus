@@ -10,6 +10,7 @@ import Title from '../../Components/Title/Title';
 import api from "../../Services/Service";
 
 const HomePage = () => {
+
     useEffect(() => {
         // Chamar a API
         async function getProximosEventos() {
@@ -50,19 +51,6 @@ const HomePage = () => {
                                 );
                             })
                         }
-
-                        {/* <NextEvent
-                            title={"Happy Hour Event"}
-                            description={"Lorem ipsum dolor sit amet consectetur adipisicing elit."}
-                            eventDate={"08/11/2023"}
-                            idEvento={"jefkhsgdshg25487edbfb"}
-                        />
-                        <NextEvent
-                            title={"Happy Hour Event"}
-                            description={"Lorem ipsum dolor sit amet consectetur adipisicing elit."}
-                            eventDate={"08/11/2023"}
-                            idEvento={"jhuyghbjkniug89456df"}
-                        /> */}
                     </div>
                 </Container>
             </section>

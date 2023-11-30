@@ -1,64 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import './HomePage.css';
+import React, { useEffect, useState } from "react";
+import "./HomePage.css";
 import MainContent from "../../Components/MainContent/MainContent";
-import Banner from '../../Components/Banner/Banner';
-import VisionSection from '../../Components/VisionSection/VisionSection';
-import ContactSection from '../../Components/ContactSection/ContactSection';
-import NextEvent from '../../Components/NextEvent/NextEvent';
-import Container from '../../Components/Container/Container';
-import Title from '../../Components/Title/Title';
+import Banner from "../../Components/Banner/Banner";
+import VisionSection from "../../Components/VisionSection/VisionSection";
+import ContactSection from "../../Components/ContactSection/ContactSection";
+import NextEvent from "../../Components/NextEvent/NextEvent";
+import Container from "../../Components/Container/Container";
+import Title from "../../Components/Title/Title";
 import api from "../../Services/Service";
 
 const HomePage = () => {
+  useEffect(() => {
+    // Chamar a API
+    async function getProximosEventos() {
+      try {
+        const promise = await api.get("/Evento/ListarProximos");
 
-    useEffect(() => {
-        // Chamar a API
-        async function getProximosEventos() {
-            try {
-                const promise = await api.get("/Evento/ListarProximos");
+        setNextEvents(promise.data);
+      } catch (error) {
+        alert("Deu ruim na API");
+      }
+    }
+    getProximosEventos();
+    console.log("A HomePage foi montada.");
+  }, []);
 
-                setNextEvents(promise.data);
-            } catch (error) {
-                alert("Deu ruim na API");
-            }
-        }
-        getProximosEventos();
-        console.log("A HomePage foi montada.");
-    }, []);
+  // fake mock - api mockada
+  const [nextEvents, setNextEvents] = useState([]);
 
-    // fake mock - api mockada
-    const [nextEvents, setNextEvents] = useState([]);
+  return (
+    <MainContent>
+      <Banner />
 
-    return (
-        <MainContent>
-            <Banner/>
+      {/* Próximos eventos */}
+      <section className="proximos-eventos">
+        <Container>
+          <Title titleText={"Próximos Eventos"} />
 
-            {/* Próximos eventos */}
-            <section className="proximos-eventos">
-                <Container>
-                    <Title titleText={"Próximos Eventos"}/>
+          <div className="events-box">
+            {nextEvents.map((e) => {
+              return (
+                <NextEvent
+                  title={e.nomeEvento}
+                  description={e.descricao}
+                  eventDate={e.dataEvento}
+                  idEvento={e.idEvento}
+                />
+              );
+            })}
+          </div>
+        </Container>
+      </section>
 
-                    <div className="events-box">
-                        {
-                            nextEvents.map((e) => {
-                                return (
-                                    <NextEvent
-                                        title={e.nomeEvento}
-                                        description={e.descricao}
-                                        eventDate={e.dataEvento}
-                                        idEvento={e.idEvento}
-                                    />
-                                );
-                            })
-                        }
-                    </div>
-                </Container>
-            </section>
-
-            <VisionSection/>
-            <ContactSection/>
-        </MainContent>
-    );
+      <VisionSection />
+      <ContactSection />
+    </MainContent>
+  );
 };
 
 export default HomePage;

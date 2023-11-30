@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
 import logo from "../../assets/images/logo-pink.svg";
 import loginImage from "../../assets/images/login.svg";
@@ -10,12 +10,18 @@ import api from "../../Services/Service";
 import "./LoginPage.css";
 import MainContent from "../../Components/MainContent/MainContent";
 import { UserContext, userDecodeToken } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
     const [notifyUser, setNotifyUser] = useState({});
     const [user, setUser] = useState({email: "user@email.com", senha: "user123"});
     // Dados globais do usuário
     const { userData, setUserData } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (userData.nome) navigate("/");
+    }, [userData]);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -33,6 +39,7 @@ const LoginPage = () => {
             const userFullToken = userDecodeToken(promise.data.token);
             setUserData(userFullToken); // Guarda os dados decodificados (payload)
             localStorage.setItem("token", JSON.stringify(userFullToken));
+            navigate("/");
 
             notifier("success", "Login concluído com sucesso!", setNotifyUser);
         } catch (error) {

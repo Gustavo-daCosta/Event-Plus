@@ -8,7 +8,7 @@ export const userDecodeToken = (theToken) => {
 
     return {
         role: decoded.role,
-        name: decoded.name,
+        nome: decoded.name,
         userId: decoded.jti,
         token: theToken,
     }

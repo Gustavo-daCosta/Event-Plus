@@ -29,3 +29,10 @@
     margin-top: 5px;
     cursor: pointer;
 }
+
+.perfil-usuario__login-link {
+    background-color: #b51d44;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 10px;
+}

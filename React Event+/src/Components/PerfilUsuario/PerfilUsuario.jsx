@@ -34,7 +34,7 @@ const PerfilUsuario = () => {
             <>
                 <Link
                     to="/login"
-                    className="perfil-usuario__menuitem"
+                    className="perfil-usuario__menuitem perfil-usuario__login-link"
                 >Login</Link>
             </>
         )}

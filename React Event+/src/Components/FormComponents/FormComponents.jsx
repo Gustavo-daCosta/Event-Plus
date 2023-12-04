@@ -54,8 +54,12 @@ export const Select = ({
     required,
     additionalClass = "",
     manipulationFunction,
-    value
+    value,
+    key,
 }) => {
+    console.log(dados[key]);
+    console.log(dados[value]);
+
     return (
         <select
             id={id}
@@ -63,14 +67,12 @@ export const Select = ({
             required={required}
             className={`input-component ${additionalClass}`}
             onChange={manipulationFunction}
-            // value={defaultValue}
-            // defaultValue={""}
         >
             <option value="">Selecione</option>
             {
                 dados.map((dado) => {
                     return (
-                        <option key={dado.idTipoEvento} value={dado.idTipoEvento}>{dado.titulo}</option>
+                        <option key={dado[key]} value={dado[key]}>{dado[value]}</option>
                     );
                 })
             }

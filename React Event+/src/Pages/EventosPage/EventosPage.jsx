@@ -20,11 +20,11 @@ const EventosPage = () => {
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [instituicoes, setInstituicoes] = useState([{
-        "idInstituicao": "b8e060fa-4a53-4ecf-b781-95856b63183d",
-        "cnpj": "18571757000109",
-        "endereco": "Rua Quatorze de Outubro",
-        "nomeFantasia": "SENAI"
-    }]);
+        "idInstituicao": "2f398503-4420-407b-9753-2a4ef26b91a9",
+        "cnpj": "40869269000123",
+        "endereco": "Travessa Pedro Suzart",
+        "nomeFantasia": "IANES Festas & Eventos"
+      }]);
     const [tiposEvento, setTiposEvento] = useState([]);
     const [idTipoEvento, setIdTipoEvento] = useState("");
     const [data, setData] = useState("");
@@ -66,6 +66,9 @@ const EventosPage = () => {
     async function handleSubmit(e) {
         e.preventDefault();
 
+        console.log(idTipoEvento);
+        console.log(tiposEvento);
+
         if (nome.trim().length < 3) {
             notifier("warning", "O título deve ter no mínimo 3 caracteres", setNotifyUser);
             return;
@@ -75,11 +78,18 @@ const EventosPage = () => {
         // Dentro da API criar uma exceção para evitar que uma data que já passou seja cadastrada
 
         try {
+            console.log({
+                nomeEvento: nome,
+                descricao: descricao,
+                dataEvento: data,
+                idTipoEvento: idTipoEvento,
+                idInstituicao: instituicoes[0].idInstituicao,
+            });
             await api.post("/Evento", {
                 nomeEvento: nome,
-                descricao,
+                descricao: descricao,
                 dataEvento: data,
-                idTipoEvento,
+                idTipoEvento: idTipoEvento,
                 idInstituicao: instituicoes[0].idInstituicao,
             });
             notifier("success", "Cadastrado com sucesso", setNotifyUser);
@@ -90,6 +100,7 @@ const EventosPage = () => {
             updateList();
         } catch (error) {
             notifier("danger", "Problemas ao cadastrar. Verifique a conexão com a internet!", setNotifyUser);
+            console.log(error);
         }
     }
 
@@ -104,9 +115,9 @@ const EventosPage = () => {
         try {
             await api.put("/Evento/" + idEvento, {
                 nomeEvento: nome,
-                descricao,
                 dataEvento: data,
-                idTipoEvento,
+                descricao: descricao,
+                idTipoEvento: idTipoEvento,
                 idInstituicao: instituicoes[0].idInstituicao,
             });
             notifier("success", "Atualizado com sucesso!", setNotifyUser);
@@ -193,8 +204,9 @@ const EventosPage = () => {
                                         name={"tipoEvento"}
                                         required={"required"}
                                         dados={tiposEvento}
-                                        value={idTipoEvento}
                                         manipulationFunction={(e) => setIdTipoEvento(e.target.value)}
+                                        arrayKey={"idTipoEvento"}
+                                        arrayValue={"titulo"}
                                     />
                                     <Input
                                         type={"date"}
@@ -237,8 +249,9 @@ const EventosPage = () => {
                                         name={"tipoEvento"}
                                         required={"required"}
                                         dados={tiposEvento}
-                                        value={idTipoEvento}
                                         manipulationFunction={(e) => setIdTipoEvento(e.target.value)}
+                                        // key={Object.keys(tiposEvento[0])[0]} value={Object.keys(tiposEvento[0])[1]}
+                                        key={"idTipoEvento"} value={"titulo"}
                                     />
                                     <Input
                                         type={"date"}

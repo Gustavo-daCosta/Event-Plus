@@ -31,19 +31,25 @@ const EventosAlunoPage = () => {
 
   useEffect(() => {
     async function loadEventsType() {
-      // Trazer todos os eventos
-      // Ou trazer somente os meus eventos
-
       try {
-        
+        // setShowSpinner(true);
         if (tipoEvento === "1") {
           const promise = await api.get("/Evento");
+          const promiseEventos = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`);
+
+          const dadosMarcados = verificaPresenca(promise.data, promiseEventos.data);
+          // console.clear();
+          // console.log("Dados marcados");
+          // console.log(dadosMarcados);
+
           setEventos(promise.data);
-        } else if (tipoEvento === "2") {
+          // setShowSpinner(false);
+        } else {
+
           let arrEventos = [];
           const promiseEventos = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`);
           promiseEventos.data.forEach((element) => {
-            arrEventos.push(element.evento);
+            arrEventos.push(...element.evento);
           });
           setEventos(promiseEventos.data);
         }
@@ -53,7 +59,19 @@ const EventosAlunoPage = () => {
     }
 
     loadEventsType();
-  });
+  }, [tipoEvento, userData.userId]);
+
+  const verificaPresenca = (arrAllEvents, eventsUser) => {
+    for (let x = 0; x < arrAllEvents.length; x++) {
+      for (let i = 0; i < eventsUser.length; i++) {
+        if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) {
+          arrAllEvents[x].situacao = true;
+          break;
+        }
+      }
+    }
+    return arrAllEvents;
+  }
 
   // toggle meus eventos ou todos os eventos
   function myEvents(tpEvent) {
@@ -88,7 +106,7 @@ const EventosAlunoPage = () => {
             dados={quaisEventos} // aqui o array dos tipos
             manipulationFunction={(e) => myEvents(e.target.value)} // aqui só a variável state
             additionalClass="select-tp-evento"
-            key={Object.keys(quaisEventos[0])[0]} value={Object.keys(quaisEventos[0])[1]}
+            arrayKey={"value"} arrayValue={"text"}
           />
           <Table
             dados={eventos}

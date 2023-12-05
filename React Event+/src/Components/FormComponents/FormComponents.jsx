@@ -54,11 +54,11 @@ export const Select = ({
     required,
     additionalClass = "",
     manipulationFunction,
-    value,
-    key,
+    arrayValue,
+    arrayKey,
 }) => {
-    console.log(dados[key]);
-    console.log(dados[value]);
+    // console.log(dados[keyTest]);
+    // console.log(dados[valueTest]);
 
     return (
         <select
@@ -72,7 +72,7 @@ export const Select = ({
             {
                 dados.map((dado) => {
                     return (
-                        <option key={dado[key]} value={dado[key]}>{dado[value]}</option>
+                        <option key={dado[arrayKey]} value={dado[arrayKey]}>{dado[arrayValue]}</option>
                     );
                 })
             }

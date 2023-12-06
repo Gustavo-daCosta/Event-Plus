@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import Header from "../../Components/Header/Header";
 import MainContent from "../../Components/MainContent/MainContent";
 import Title from "../../Components/Title/Title";
 import Table from "./TableEvA/TableEvA";
@@ -14,7 +13,7 @@ import { UserContext } from "../../Context/AuthContext";
 
 const EventosAlunoPage = () => {
   // state do menu mobile
-  const [exibeNavbar, setExibeNavbar] = useState(false);
+  // const [exibeNavbar, setExibeNavbar] = useState(false);
   const [eventos, setEventos] = useState([]);
   // select mocado
   const [quaisEventos, setQuaisEventos] = useState([
@@ -30,42 +29,44 @@ const EventosAlunoPage = () => {
   const { userData, setUserData } = useContext(UserContext);
 
   useEffect(() => {
-    async function loadEventsType() {
-      try {
-        // setShowSpinner(true);
-        if (tipoEvento === "1") {
-          const promise = await api.get("/Evento");
-          const promiseEventos = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`);
-
-          const dadosMarcados = verificaPresenca(promise.data, promiseEventos.data);
-          // console.clear();
-          // console.log("Dados marcados");
-          // console.log(dadosMarcados);
-
-          setEventos(promise.data);
-          // setShowSpinner(false);
-        } else {
-
-          let arrEventos = [];
-          const promiseEventos = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`);
-          promiseEventos.data.forEach((element) => {
-            arrEventos.push(...element.evento);
-          });
-          setEventos(promiseEventos.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
     loadEventsType();
   }, [tipoEvento, userData.userId]);
+
+  async function loadEventsType() {
+    try {
+      if (tipoEvento !== "2") {
+        const promise = await api.get("/Evento");
+        const promiseEventos = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`);
+
+        const dadosMarcados = verificaPresenca(promise.data, promiseEventos.data);
+        // console.clear();
+        // console.log("Dados marcados");
+        // console.log(dadosMarcados);
+
+        setEventos(promise.data);
+      } else {
+        let arrEventos = [];
+        const promiseEventos = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`);
+        promiseEventos.data.forEach((element) => {
+          arrEventos.push({
+            ...element.evento,
+            situacao: element.situacao,
+            idPresencaEvento: element.idPresencaEvento,
+          });
+        });
+        setEventos(arrEventos);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const verificaPresenca = (arrAllEvents, eventsUser) => {
     for (let x = 0; x < arrAllEvents.length; x++) {
       for (let i = 0; i < eventsUser.length; i++) {
         if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) {
           arrAllEvents[x].situacao = true;
+          arrAllEvents[x].idPresencaEvento = eventsUser[i].idPresencaEvento;
           break;
         }
       }
@@ -79,20 +80,52 @@ const EventosAlunoPage = () => {
   }
 
   async function loadMyComentary(idComentary) {
-    return "????";
+    alert("Carregar o comentário")
+  }
+
+  async function postMyComentary() {
+    alert("Cadastrar o comentário");
+  }
+
+  const commentaryRemove = async () => {
+    alert("Remover o comentário");
   }
 
   const showHideModal = () => {
     setShowModal(showModal ? false : true);
   };
 
-  const commentaryRemove = () => {
-    alert("Remover o comentário");
-  };
+  async function handleConnect(idEvent, connect = false, idPresencaEvento = null) {
+    if (!connect) {
+      try {
+        const promise = await api.post("/PresencasEvento", {
+          situacao: true,
+          idUsuario: userData.userId,
+          idEvento: idEvent,
+        });
 
-  function handleConnect() {
-    alert("Desenvolver a função conectar evento");
+        if (promise.status === 201) {
+          loadEventsType();
+          console.log("Presença confirmada"); // trocar para notifier
+        }
+      } catch (error) {
+        console.log("Erro ao conectar");
+        console.log(error);
+      }
+    } else {
+      try {
+        const promiseDelete = await api.delete(`/PresencasEvento/${idPresencaEvento}`);
+        
+        if (promiseDelete.status === 204) {
+          loadEventsType();
+          console.log("Presença removida");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
+
   return (
     <>
       <MainContent>
@@ -107,6 +140,7 @@ const EventosAlunoPage = () => {
             manipulationFunction={(e) => myEvents(e.target.value)} // aqui só a variável state
             additionalClass="select-tp-evento"
             arrayKey={"value"} arrayValue={"text"}
+            needInitialValue={false}
           />
           <Table
             dados={eventos}
@@ -126,6 +160,8 @@ const EventosAlunoPage = () => {
           userId={userData.userId}
           showHideModal={showHideModal}
           fnDelete={commentaryRemove}
+          fnGet={loadMyComentary}
+          fnPost={postMyComentary}
         />
       ) : null}
     </>

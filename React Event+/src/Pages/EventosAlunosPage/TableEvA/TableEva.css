@@ -11,6 +11,20 @@
     font-family: Poppins-Regular;
     src: url(../../../assets/fonts/Poppins/Poppins-Regular.ttf);
   }
+
+  .empty-card {
+    background-color: #B51D44;
+    color: white;
+    border-radius: 15px;
+    width: calc(100% / 3);
+    padding: 10px 15px;
+    margin: 0 calc(100% / 3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
   
   /* Custommizations */
   

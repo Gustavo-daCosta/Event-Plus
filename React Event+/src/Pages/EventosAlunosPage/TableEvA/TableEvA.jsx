@@ -1,6 +1,5 @@
 import React from "react";
 import comentaryIcon from "../../../assets/images/comentary-icon.svg";
-import trashDelete from "../../../assets/images/trash-delete.svg";
 import { dateFormatDbToView } from "../../../Utils/stringFunction";
 import ToggleSwitch from "../../../Components/Toggle/Toggle";
 // importa a biblioteca de tooltips ()
@@ -29,6 +28,14 @@ const Table = ({ dados, fnConnect = null, fnShowModal = null }) => {
       <tbody>
         {dados.map((e) => {
           return (
+            // {dados.length === 0 ? (
+            //   <>
+            //     <td className="empty-card">
+            //       <h3>Aviso!</h3>
+            //       <p>O usuário não confirmou presença em nenhum evento.</p>
+            //     </td>
+            //   </>
+            // ) : null}
             <tr className="tbal-data__head-row" key={Math.random()}>
               <td className="tbal-data__data tbal-data__data--big">
                 {e.nomeEvento}
@@ -36,7 +43,6 @@ const Table = ({ dados, fnConnect = null, fnShowModal = null }) => {
               
               <td className="tbal-data__data tbal-data__data--big tbal-data__btn-actions">
                 {dateFormatDbToView(e.dataEvento)}
-                {/* {e.dataEvento} */}
               </td>
 
               <td className="tbal-data__data tbal-data__data--big tbal-data__btn-actions">
@@ -48,7 +54,12 @@ const Table = ({ dados, fnConnect = null, fnShowModal = null }) => {
                   onClick={fnShowModal}
                 />
 
-                <ToggleSwitch toggleActive={e.situacao} manipulationFunction={fnConnect} />
+                <ToggleSwitch
+                  toggleActive={e.situacao}
+                  manipulationFunction={() => {
+                    fnConnect(e.idEvento, e.situacao, e.idPresencaEvento);
+                  }}
+                />
               </td>
             </tr>
           );

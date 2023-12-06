@@ -56,6 +56,7 @@ export const Select = ({
     manipulationFunction,
     arrayValue,
     arrayKey,
+    needInitialValue = true,
 }) => {
     // console.log(dados[keyTest]);
     // console.log(dados[valueTest]);
@@ -68,7 +69,11 @@ export const Select = ({
             className={`input-component ${additionalClass}`}
             onChange={manipulationFunction}
         >
-            <option value="">Selecione</option>
+            {needInitialValue ? (
+            <>
+                <option value="">Selecione</option>
+            </>
+            ) : null}
             {
                 dados.map((dado) => {
                     return (

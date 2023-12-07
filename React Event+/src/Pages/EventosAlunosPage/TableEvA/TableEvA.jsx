@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import comentaryIcon from "../../../assets/images/comentary-icon.svg";
 import { dateFormatDbToView } from "../../../Utils/stringFunction";
 import ToggleSwitch from "../../../Components/Toggle/Toggle";
@@ -48,10 +48,12 @@ const Table = ({ dados, fnConnect = null, fnShowModal = null }) => {
               <td className="tbal-data__data tbal-data__data--big tbal-data__btn-actions">
                 <img
                   className="tbal-data__icon"
-                  idevento={e.idEvento}
+                  idEvento={e.idEvento}
                   src={comentaryIcon}
                   alt=""
-                  onClick={fnShowModal}
+                  onClick={() => {
+                    fnShowModal(e.idEvento);
+                  }}
                 />
 
                 <ToggleSwitch

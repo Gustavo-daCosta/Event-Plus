@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using webapi.event_.Domains;
 using webapi.event_.Interfaces;
@@ -13,83 +12,93 @@ namespace webapi.event_.Controllers
     public class EventoController : ControllerBase
     {
         private IEventoRepository _eventoRepository { get; set; }
-        public EventoController() => _eventoRepository = new EventoRepository();
+
+        public EventoController()
+        {
+            _eventoRepository = new EventoRepository();
+        }
 
         [HttpGet]
-        [Route("ListarTodos")]
         public IActionResult Get()
         {
             try
             {
-                List<Evento> listaEventos = _eventoRepository.Listar();
-                return Ok(listaEventos);
+                return Ok(_eventoRepository.Listar());
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpGet]
-        [Route("BuscarPorId")]
+        [HttpGet("ListarProximos")]
+        public IActionResult GetNextEvents()
+        {
+            try
+            {
+                return Ok(_eventoRepository.ListarProximos());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
         public IActionResult GetById(Guid id)
         {
             try
             {
-                Evento eventoBuscado = _eventoRepository.BuscarPorId(id);
-                return Ok(eventoBuscado);
+                return Ok(_eventoRepository.BuscarPorId(id));
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
             }
         }
 
         [HttpPost]
-        [Route("Cadastrar")]
-        [Authorize(Roles = "Administrador")]
         public IActionResult Post(Evento evento)
         {
             try
             {
                 _eventoRepository.Cadastrar(evento);
-                return StatusCode(201);
+
+                return StatusCode(201,evento);
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpDelete]
-        [Route("Deletar")]
-        [Authorize(Roles = "Administrador")]
-        public IActionResult Delete(Guid id)
-        {
-            try
-            {
-                _eventoRepository.Deletar(id);
-                return Ok();
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
-        }
-
-        [HttpPut]
-        [Route("Atualizar")]
-        [Authorize(Roles = "Administrador")]
+        [HttpPut("{id}")]
         public IActionResult Put(Guid id, Evento evento)
         {
             try
             {
                 _eventoRepository.Atualizar(id, evento);
-                return Ok();
+
+                return NoContent();
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            try
+            {
+                _eventoRepository.Deletar(id);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }

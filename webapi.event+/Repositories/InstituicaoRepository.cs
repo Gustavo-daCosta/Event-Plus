@@ -1,4 +1,4 @@
-﻿using webapi.event_.Context;
+﻿using webapi.event_.Contexts;
 using webapi.event_.Domains;
 using webapi.event_.Interfaces;
 
@@ -6,56 +6,91 @@ namespace webapi.event_.Repositories
 {
     public class InstituicaoRepository : IInstituicaoRepository
     {
-        private readonly EventContext ctx;
-        public InstituicaoRepository() => ctx = new EventContext();
+        private readonly Event_Context _context;
+
+        public InstituicaoRepository()
+        {
+            _context = new Event_Context();
+        }
 
         public void Atualizar(Guid id, Instituicao instituicao)
         {
             try
             {
-                Instituicao instituicaoBuscada = ctx.Instituicao.FirstOrDefault(i => i.IdInstituicao == id)!;
+                Instituicao instituicaoBuscada = _context.Instituicao.Find(id)!;
 
                 if (instituicaoBuscada != null)
                 {
-                    instituicaoBuscada.NomeFantasia = instituicao.NomeFantasia;
                     instituicaoBuscada.CNPJ = instituicao.CNPJ;
                     instituicaoBuscada.Endereco = instituicao.Endereco;
-                    ctx.Instituicao.Update(instituicaoBuscada);
-                    ctx.SaveChanges();
+                    instituicaoBuscada.NomeFantasia = instituicao.NomeFantasia;
                 }
-                return;
+
+                _context.Instituicao.Update(instituicaoBuscada!);
+
+                _context.SaveChanges();
             }
             catch (Exception)
-            { throw; }
+            {
+                throw;
+            }
+        }
+
+        public Instituicao BuscarPorId(Guid id)
+        {
+            try
+            {
+                return _context.Instituicao.Find(id)!;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void Cadastrar(Instituicao instituicao)
         {
             try
             {
-                ctx.Instituicao.Add(instituicao);
-                ctx.SaveChanges();
+                _context.Instituicao.Add(instituicao);
+
+                _context.SaveChanges();
             }
             catch (Exception)
-            { throw; }
+            {
+                throw;
+            }
         }
 
         public void Deletar(Guid id)
         {
             try
             {
-                Instituicao instituicaoToBeRemoved = ctx.Instituicao.FirstOrDefault(i => i.IdInstituicao == id)!;
+                Instituicao InstituicaoBuscada = _context.Instituicao.Find(id)!;
 
-                if (instituicaoToBeRemoved != null)
+                if (InstituicaoBuscada != null)
                 {
-                    ctx.Instituicao.Remove(instituicaoToBeRemoved);
-                    ctx.SaveChanges();
+                    _context.Instituicao.Remove(InstituicaoBuscada);
                 }
+
+                _context.SaveChanges();
             }
             catch (Exception)
-            { throw; }
+            {
+                throw;
+            }
         }
 
-        public List<Instituicao> Listar() => ctx.Instituicao.ToList();
+        public List<Instituicao> Listar()
+        {
+            try
+            {
+                return _context.Instituicao.ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

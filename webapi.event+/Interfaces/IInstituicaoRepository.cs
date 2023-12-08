@@ -4,12 +4,10 @@ namespace webapi.event_.Interfaces
 {
     public interface IInstituicaoRepository
     {
-        public List<Instituicao> Listar();
-
-        public void Cadastrar(Instituicao instituicao);
-
-        public void Deletar(Guid id);
-
-        public void Atualizar(Guid id, Instituicao instituicao);
+        void Cadastrar(Instituicao instituicao);
+        void Deletar(Guid id);
+        List<Instituicao> Listar();
+        Instituicao BuscarPorId(Guid id);
+        void Atualizar(Guid id, Instituicao instituicao);
     }
 }

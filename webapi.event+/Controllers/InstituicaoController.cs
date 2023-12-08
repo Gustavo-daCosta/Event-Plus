@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using webapi.event_.Domains;
 using webapi.event_.Interfaces;
@@ -12,70 +11,81 @@ namespace webapi.event_.Controllers
     [Produces("application/json")]
     public class InstituicaoController : ControllerBase
     {
-        private IInstituicaoRepository _instituicaoRepository;
-        public InstituicaoController() => _instituicaoRepository = new InstituicaoRepository();
+        private IInstituicaoRepository _instituicaoRepository { get; set; }
+
+        public InstituicaoController()
+        {
+            _instituicaoRepository = new InstituicaoRepository();
+        }
 
         [HttpGet]
-        [Route("ListarTodos")]
-        [Authorize]
         public IActionResult Get()
         {
             try
             {
-                List<Instituicao> listaInstituicoes = _instituicaoRepository.Listar();
-                return Ok(listaInstituicoes);
+                return Ok(_instituicaoRepository.Listar());
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            try
+            {
+                return Ok(_instituicaoRepository.BuscarPorId(id));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
         [HttpPost]
-        [Route("Cadastrar")]
-        [Authorize(Roles = "Administrador")]
         public IActionResult Post(Instituicao instituicao)
         {
             try
             {
                 _instituicaoRepository.Cadastrar(instituicao);
-                return StatusCode(201, "Instituição criada com sucesso!");
+
+                return StatusCode(201);
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpPut]
-        [Route("Atualizar")]
-        [Authorize(Roles = "Administrador")]
+        [HttpPut("{id}")]
         public IActionResult Put(Guid id, Instituicao instituicao)
         {
             try
             {
                 _instituicaoRepository.Atualizar(id, instituicao);
-                return Ok();
+
+                return NoContent();
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpDelete]
-        [Route("Deletar")]
-        [Authorize(Roles = "Administrador")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
             try
             {
                 _instituicaoRepository.Deletar(id);
-                return Ok();
+
+                return NoContent();
             }
-            catch (Exception error)
+            catch (Exception e)
             {
-                return BadRequest(error.Message);
+                return BadRequest(e.Message);
             }
         }
     }

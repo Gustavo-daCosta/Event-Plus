@@ -3,36 +3,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace webapi.event_.Domains
 {
-    [Table(nameof(Evento))]
+    [Table("Evento")]
     public class Evento
     {
         [Key]
         public Guid IdEvento { get; set; } = Guid.NewGuid();
 
-        [Column(TypeName = "VARCHAR(150)")]
-        [Required(ErrorMessage = "Nome do Evento é obrigatório")]
-        public string? Nome { get; set; }
+        [Column(TypeName = "DATE")]
+        [Required(ErrorMessage = "A data do evento é obrigatória!")]
+        public DateTime DataEvento { get; set; }
 
-        [Column(TypeName = "DATETIME")]
-        [Required(ErrorMessage = "Data do Evento é obrigatória!")]
-        public DateTime Data { get; set; }
+        [Column(TypeName = "VARCHAR(100)")]
+        [Required(ErrorMessage = "Nome do evento obrigatório!")]
+        public string? NomeEvento { get; set; }
 
-        [Column(TypeName = "VARCHAR(200)")]
-        [Required(ErrorMessage = "Descrição do Evento é obrigatório")]
+        [Column(TypeName = "TEXT")]
+        [Required(ErrorMessage = "Descrição do evento obrigatório!")]
         public string? Descricao { get; set; }
 
-        // Ref. TipoEvento - FK
-        [Required(ErrorMessage = "Tipo de Evento é obrigatório!")]
+
+        //ref.tabela TiposEvento
         public Guid IdTipoEvento { get; set; }
 
-        [ForeignKey(nameof(IdTipoEvento))]
-        public TipoEvento? TipoEvento { get; set; }
 
-        // Ref. Instituição - FK
-        [Required(ErrorMessage = "Instituicao é obrigatória!")]
+        [ForeignKey("IdTipoEvento")]
+        public TiposEvento? TiposEvento { get; set; }
+
+
+        //ref.tabela Instituicao
         public Guid IdInstituicao { get; set; }
 
-        [ForeignKey(nameof(IdInstituicao))]
+
+        [ForeignKey("IdInstituicao")]
         public Instituicao? Instituicao { get; set; }
     }
 }

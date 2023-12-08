@@ -4,14 +4,11 @@ namespace webapi.event_.Interfaces
 {
     public interface IEventoRepository
     {
-        public void Cadastrar(Evento evento);
-
-        public void Deletar(Guid id);
-
-        public List<Evento> Listar();
-
-        public Evento BuscarPorId(Guid id);
-
-        public void Atualizar(Guid id, Evento evento);
+        void Cadastrar(Evento evento);
+        void Deletar(Guid id);
+        List<Evento> Listar();
+        List<Evento> ListarProximos();
+        Evento BuscarPorId(Guid id);
+        void Atualizar(Guid id, Evento evento);
     }
 }

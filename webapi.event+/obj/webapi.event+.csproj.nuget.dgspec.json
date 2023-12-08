@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\51908518855\\Desktop\\Event-Plus\\webapi.event+\\webapi.event+.csproj": {}
+    "C:\\Users\\51908518855\\Desktop\\API\\2023-1S-2D\\sprint-2-api\\Event+\\webapi.event+\\webapi.event+.csproj": {}
   },
   "projects": {
-    "C:\\Users\\51908518855\\Desktop\\Event-Plus\\webapi.event+\\webapi.event+.csproj": {
+    "C:\\Users\\51908518855\\Desktop\\API\\2023-1S-2D\\sprint-2-api\\Event+\\webapi.event+\\webapi.event+.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\51908518855\\Desktop\\Event-Plus\\webapi.event+\\webapi.event+.csproj",
+        "projectUniqueName": "C:\\Users\\51908518855\\Desktop\\API\\2023-1S-2D\\sprint-2-api\\Event+\\webapi.event+\\webapi.event+.csproj",
         "projectName": "webapi.event+",
-        "projectPath": "C:\\Users\\51908518855\\Desktop\\Event-Plus\\webapi.event+\\webapi.event+.csproj",
+        "projectPath": "C:\\Users\\51908518855\\Desktop\\API\\2023-1S-2D\\sprint-2-api\\Event+\\webapi.event+\\webapi.event+.csproj",
         "packagesPath": "C:\\Users\\51908518855\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\51908518855\\Desktop\\Event-Plus\\webapi.event+\\obj\\",
+        "outputPath": "C:\\Users\\51908518855\\Desktop\\API\\2023-1S-2D\\sprint-2-api\\Event+\\webapi.event+\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\51908518855\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -71,6 +71,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[7.0.11, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[7.0.9, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

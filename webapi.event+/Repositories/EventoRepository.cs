@@ -1,4 +1,5 @@
-﻿using webapi.event_.Context;
+﻿using System.ComponentModel.Design;
+using webapi.event_.Contexts;
 using webapi.event_.Domains;
 using webapi.event_.Interfaces;
 
@@ -6,96 +7,126 @@ namespace webapi.event_.Repositories
 {
     public class EventoRepository : IEventoRepository
     {
-        private readonly EventContext ctx;
-        public EventoRepository() => ctx = new EventContext();
+        private readonly Event_Context _context;
+
+        public EventoRepository()
+        {
+            _context = new Event_Context();
+        }
 
         public void Atualizar(Guid id, Evento evento)
         {
             try
             {
-                Evento eventoBuscado = ctx.Evento.FirstOrDefault(tu => tu.IdEvento == id)!;
+                Evento eventoBuscado = _context.Evento.Find(id)!;
 
                 if (eventoBuscado != null)
                 {
-                    eventoBuscado.Nome = evento.Nome;
-                    eventoBuscado.Data = evento.Data;
+                    eventoBuscado.DataEvento = evento.DataEvento;
+                    eventoBuscado.NomeEvento = evento.NomeEvento;
                     eventoBuscado.Descricao = evento.Descricao;
                     eventoBuscado.IdTipoEvento = evento.IdTipoEvento;
-                    eventoBuscado.IdInstituicao = evento.IdInstituicao;
-                    ctx.Evento.Update(eventoBuscado);
-                    ctx.SaveChanges();
                 }
-                return;
+
+                _context.Evento.Update(eventoBuscado!);
+
+                _context.SaveChanges();
             }
             catch (Exception)
-            { throw; }
+            {
+                throw;
+            }
         }
 
         public Evento BuscarPorId(Guid id)
         {
             try
             {
-                Evento eventoBuscado = Listar().FirstOrDefault(e => e.IdEvento == id)!;
-                //Evento eventoBuscado = ctx.Evento.FirstOrDefault(e => e.IdEvento == id)!;
-                return eventoBuscado;
+                return _context.Evento.Find(id)!;
             }
             catch (Exception)
-            { throw; }
+            {
+                throw;
+            }
         }
 
         public void Cadastrar(Evento evento)
         {
             try
             {
-                ctx.Evento.Add(evento);
-                ctx.SaveChanges();
+                _context.Evento.Add(evento);
+
+                _context.SaveChanges();
             }
             catch (Exception)
-            { throw; }
+            {
+                throw;
+            }
+            
         }
 
         public void Deletar(Guid id)
         {
             try
             {
-                Evento eventoToBeRemoved = ctx.Evento.FirstOrDefault(tu => tu.IdEvento == id)!;
+                Evento eventoBuscado = _context.Evento.Find(id)!;
 
-                if (eventoToBeRemoved != null)
+                if (eventoBuscado != null)
                 {
-                    ctx.Evento.Remove(eventoToBeRemoved);
-                    ctx.SaveChanges();
+                    _context.Evento.Remove(eventoBuscado);
                 }
-                return;
+
+                _context.SaveChanges();
             }
             catch (Exception)
-            { throw; }
+            {
+                throw;
+            }
+            
         }
 
         public List<Evento> Listar()
         {
-            List<Evento> listaEventos = ctx.Evento.Select(e => new Evento
+            try
             {
-                IdEvento = e.IdEvento,
-                Nome = e.Nome,
-                Data = e.Data,
-                Descricao = e.Descricao,
-                IdTipoEvento = e.IdTipoEvento,
-                TipoEvento = new TipoEvento
-                {
-                    IdTipoEvento = e.TipoEvento!.IdTipoEvento,
-                    Titulo = e.TipoEvento!.Titulo
-                },
-                IdInstituicao = e.IdInstituicao,
-                Instituicao = new Instituicao
-                {
-                    IdInstituicao = e.Instituicao!.IdInstituicao,
-                    CNPJ = e.Instituicao!.CNPJ,
-                    Endereco = e.Instituicao!.Endereco,
-                    NomeFantasia = e.Instituicao!.NomeFantasia
-                }
-            }).ToList();
+                return _context.Evento
+                    .Select(e => new Evento
+                    {
+                        IdEvento = e.IdEvento,
+                        NomeEvento = e.NomeEvento,
+                        Descricao = e.Descricao,
+                        DataEvento = e.DataEvento,
+                        IdTipoEvento = e.IdTipoEvento,
+                        TiposEvento = new TiposEvento
+                        {
+                            IdTipoEvento = e.IdTipoEvento,
+                            Titulo = e.TiposEvento!.Titulo
+                        },
+                        IdInstituicao = e.IdInstituicao,
+                        Instituicao = new Instituicao
+                        {
+                            IdInstituicao = e.IdInstituicao,
+                            NomeFantasia = e.Instituicao!.NomeFantasia
+                        }
+                    }).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-            return listaEventos;
+        public List<Evento> ListarProximos()
+        {
+            try
+            {
+                return _context.Evento
+                    .Where(e => e.DataEvento > DateTime.Now).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

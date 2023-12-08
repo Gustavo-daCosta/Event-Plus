@@ -4,12 +4,10 @@ namespace webapi.event_.Interfaces
 {
     public interface IUsuarioRepository
     {
-        public void Cadastrar(Usuario usuario);
+        void Cadastrar(Usuario usuario);
+     
+        Usuario BuscarPorId(Guid id);
 
-        public Usuario BuscarPorId(Guid id);
-
-        public Usuario BuscarPorEmailESenha(string email, string senha);
-
-        public List<PresencaEvento> ListarMeusEventos(Guid id);
+        Usuario BuscarPorEmailESenha(string email, string senha);
     }
 }

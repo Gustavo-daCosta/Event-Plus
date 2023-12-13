@@ -56,11 +56,11 @@ namespace webapi.event_.Controllers
         }
 
         [HttpGet("ListarSomenteExibe")]
-        public IActionResult GetOnlyShow()
+        public IActionResult GetOnlyShow(Guid id)
         {
             try
             {
-                return Ok(_comentariosEventoRepository.ListarSomenteExibe());
+                return Ok(_comentariosEventoRepository.ListarSomenteExibe(id));
             }
             catch (Exception error)
             {

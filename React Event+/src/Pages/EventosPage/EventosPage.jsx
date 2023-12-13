@@ -250,8 +250,8 @@ const EventosPage = () => {
                                         required={"required"}
                                         dados={tiposEvento}
                                         manipulationFunction={(e) => setIdTipoEvento(e.target.value)}
-                                        // key={Object.keys(tiposEvento[0])[0]} value={Object.keys(tiposEvento[0])[1]}
-                                        key={"idTipoEvento"} value={"titulo"}
+                                        arrayKey={"idTipoEvento"}
+                                        arrayValue={"titulo"}
                                     />
                                     <Input
                                         type={"date"}

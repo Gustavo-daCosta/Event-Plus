@@ -20,14 +20,12 @@ const EventosAlunoPage = () => {
   const [quaisEventos, setQuaisEventos] = useState([
     { value: "1", text: "Todos os eventos" },
     { value: "2", text: "Meus eventos" },
-  ]);
+]);
 
   const [tipoEvento, setTipoEvento] = useState("1"); //código do tipo do Evento escolhido
   const [showSpinner, setShowSpinner] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [idEvento, setIdEvento] = useState(
-    "f6c329aa-0b0a-4fea-b581-372b08209fe1"
-  );
+  const [idEvento, setIdEvento] = useState();
 
   // recupera os dados globais do usuário
   const { userData, setUserData } = useContext(UserContext);

@@ -20,11 +20,11 @@ const EventosPage = () => {
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [instituicoes, setInstituicoes] = useState([{
-        "idInstituicao": "2f398503-4420-407b-9753-2a4ef26b91a9",
-        "cnpj": "40869269000123",
-        "endereco": "Travessa Pedro Suzart",
-        "nomeFantasia": "IANES Festas & Eventos"
-      }]);
+          "idInstituicao": "0a126c5b-6a95-4be9-bc1d-4ca940740bd0",
+          "cnpj": "87198144000182",
+          "endereco": "Rua Niterói, 180",
+          "nomeFantasia": "SENAI de Informática"
+        }]);
     const [tiposEvento, setTiposEvento] = useState([]);
     const [idTipoEvento, setIdTipoEvento] = useState("");
     const [data, setData] = useState("");

@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+    padding: 0; margin: 0;
+}
+
+:root {
+    --vermelho: #b51d44;
+    --vermelho-escuro: #821430;
+}
+
+.card {
+    border: 2px solid var(--vermelho-escuro);
+    background-color: var(--vermelho);
+    color: white;
+    border-radius: 15px;
+    height: 120px;
+    margin: 0 25%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* flex-direction: column; */
+}
+
+.card > * {
+    /* border: 2px solid blue; */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card h1 {
+    font-size: 110px !important;
+}
+
+.card p {
+    width: 50%;
+}

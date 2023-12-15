@@ -10,6 +10,7 @@
     text-transform: uppercase;
     text-align: center;
     align-self: flex-start; /* alinhamento isolado */
+    padding-top: 25px;
     /* border: 1px solid red; */
 }
 

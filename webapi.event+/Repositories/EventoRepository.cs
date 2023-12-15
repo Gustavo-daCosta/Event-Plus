@@ -42,7 +42,7 @@ namespace webapi.event_.Repositories
         {
             try
             {
-                return _context.Evento.Find(id)!;
+                return Listar().FirstOrDefault(e => e.IdEvento == id)!;
             }
             catch (Exception)
             {
